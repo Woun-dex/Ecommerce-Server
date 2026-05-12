@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: ecom
+
+woundex:
+  app:
+    jwtSecret: woundex_jwt_secret
+    jwtExpirationMs: 86400000
