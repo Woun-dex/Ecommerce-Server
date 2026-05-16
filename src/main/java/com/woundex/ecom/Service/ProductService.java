@@ -15,6 +15,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.redisson.api.RScoredSortedSet;
 import org.redisson.api.RedissonClient;
+import com.woundex.ecom.dto.ProductDTO;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.nio.file.*;
 
 
 @Service
@@ -22,6 +26,9 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private FileSystemStorageService fileStorageService;
 
     @Autowired
     private RedissonClient redissonClient;
@@ -43,8 +50,26 @@ public class ProductService {
         return productRepository.findAllById(topIds);
     }
     
-    public Product addProduct(Product product) {
-        return productRepository.save(product);
+    public Product addProduct(ProductDTO productDTO) {
+        String storageLocation = "uploads/";
+        Product newProduct = Product.builder()
+                .name(productDTO.getName())
+                .category(productDTO.getCategory())
+                .price(productDTO.getPrice())
+                .stockQuantity(productDTO.getStockQuantity())
+                .description(productDTO.getDescription())
+                .build();
+
+        if (productDTO.getImage() != null && !productDTO.getImage().isEmpty()) {
+            try {
+                String fileName = fileStorageService.store(productDTO.getImage());
+                newProduct.setImageUrl(fileName);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to store image", e);
+            }
+            }
+        
+        return productRepository.save(newProduct);
     }
 
     public void updateProduct(UUID id, Product product) {

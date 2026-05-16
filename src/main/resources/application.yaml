@@ -2,7 +2,15 @@ spring:
   application:
     name: ecom
 
-woundex:
   app:
     jwtSecret: woundex_jwt_secret
     jwtExpirationMs: 86400000
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+
+storage:
+  location: C:\Users\Woundex\Downloads\ecom\ecom\uploads
+

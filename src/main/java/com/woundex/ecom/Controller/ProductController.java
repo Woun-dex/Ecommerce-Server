@@ -8,6 +8,7 @@ import com.woundex.ecom.Entity.Product;
 import com.woundex.ecom.Service.ProductService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import lombok.RequiredArgsConstructor;
+import com.woundex.ecom.dto.ProductDTO;
 
 @RestController
 @RequestMapping("/products")
@@ -42,9 +43,10 @@ public class ProductController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
+    public ResponseEntity<Product> addProduct(@RequestBody ProductDTO product) {
         return ResponseEntity.ok(productService.addProduct(product));
     }
+
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
